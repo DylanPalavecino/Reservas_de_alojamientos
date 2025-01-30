@@ -11,6 +11,6 @@ public interface IReservaService {
 
     public ReservaDTO generarReserva(ReservaRequest reservaRequest) throws Exception;
     public String eliminarReserva(Long id);
-    public List<ReservaDTO> mostrarReservas();//Long userId);
+    public List<ReservaDTO> mostrarReservas() throws Exception;
 
 }

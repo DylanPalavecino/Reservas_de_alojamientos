@@ -1,11 +1,8 @@
 package com.donsp.arg.reserva.dto;
 
 import com.donsp.arg.alojamiento.entity.AlojamientoEntity;
-import com.donsp.arg.usuario.entity.UsuarioEntity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.donsp.arg.usuario.entity.User;
 import lombok.Builder;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
@@ -13,6 +10,6 @@ import java.time.LocalDate;
 public record ReservaDTO (LocalDate fechaInicio,
         LocalDate fechaFin,
         Double total,
-        UsuarioEntity usuario,
+        User usuario,
         AlojamientoEntity alojamiento){
 }

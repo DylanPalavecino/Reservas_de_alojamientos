@@ -7,7 +7,10 @@ import com.donsp.arg.alojamiento.repository.IAlojamientoRepository;
 import com.donsp.arg.alojamiento.service.IAlojamientoService;
 import com.donsp.arg.exception.ObjectNotFoundException;
 import com.donsp.arg.usuario.dto.UsuarioDTO;
+import com.donsp.arg.usuario.entity.User;
+import com.donsp.arg.usuario.service.IUserService;
 import org.hibernate.query.NativeQuery;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import lombok.*;
 import java.util.List;
@@ -19,10 +22,14 @@ import java.util.stream.Collectors;
 public class AlojamientoServiceImpl implements IAlojamientoService {
 
     private final IAlojamientoRepository alojRepository;
+    private final IUserService userService;
 
     //POST
     @Override
     public AlojamientoDTO crearAlojamiento(AlojamientoDTO alojamiento) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User usuario = userService.findUserByUsername(username);
 
         AlojamientoEntity alojamientoEntity = AlojamientoEntity.builder()
                 .nombre(alojamiento.nombre())
@@ -31,7 +38,7 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                 .tipoAlojamiento(alojamiento.tipoAlojamiento())
                 .precioPorNoche(alojamiento.precioPorNoche())
                 .capacidadPersonas(alojamiento.capacidadPersonas())
-                .propietario(alojamiento.propietario())
+                .propietario(usuario)
                 .build();
 
         alojRepository.save(alojamientoEntity);
@@ -43,7 +50,6 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                 .tipoAlojamiento(alojamientoEntity.getTipoAlojamiento())
                 .precioPorNoche(alojamientoEntity.getPrecioPorNoche())
                 .capacidadPersonas(alojamientoEntity.getCapacidadPersonas())
-                .propietario(alojamientoEntity.getPropietario())
                 .build();
     }
     //GET BY ID
@@ -58,7 +64,6 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                 .tipoAlojamiento(alojamientoEntity.getTipoAlojamiento())
                 .precioPorNoche(alojamientoEntity.getPrecioPorNoche())
                 .capacidadPersonas(alojamientoEntity.getCapacidadPersonas())
-                .propietario(alojamientoEntity.getPropietario())
                 .build();
 
     }
@@ -76,7 +81,6 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                         .tipoAlojamiento(alojamientoEntity.getTipoAlojamiento())
                         .precioPorNoche(alojamientoEntity.getPrecioPorNoche())
                         .capacidadPersonas(alojamientoEntity.getCapacidadPersonas())
-                        .propietario(alojamientoEntity.getPropietario())
                         .build())
                         .collect(Collectors.toList());
 
@@ -103,11 +107,8 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                         .tipoAlojamiento(alojamientoEntity.getTipoAlojamiento())
                         .precioPorNoche(alojamientoEntity.getPrecioPorNoche())
                         .capacidadPersonas(alojamientoEntity.getCapacidadPersonas())
-                        .propietario(alojamientoEntity.getPropietario())
                         .build())
                         .collect(Collectors.toList());
-
-
     }
 
     //DELETE BY ID
@@ -131,7 +132,6 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                 .tipoAlojamiento(alojamiento.tipoAlojamiento())
                 .precioPorNoche(alojamiento.precioPorNoche())
                 .capacidadPersonas(alojamiento.capacidadPersonas())
-                .propietario(alojamiento.propietario())
                 .build();
 
         alojRepository.save(alojamientoEntity);
@@ -143,7 +143,6 @@ public class AlojamientoServiceImpl implements IAlojamientoService {
                 .tipoAlojamiento(alojamientoEntity.getTipoAlojamiento())
                 .precioPorNoche(alojamientoEntity.getPrecioPorNoche())
                 .capacidadPersonas(alojamientoEntity.getCapacidadPersonas())
-                .propietario(alojamientoEntity.getPropietario())
                 .build();
 
     }

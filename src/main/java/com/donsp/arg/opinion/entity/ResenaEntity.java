@@ -1,9 +1,12 @@
 package com.donsp.arg.opinion.entity;
 
 import com.donsp.arg.alojamiento.entity.AlojamientoEntity;
-import com.donsp.arg.usuario.entity.UsuarioEntity;
+import com.donsp.arg.usuario.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 
 @AllArgsConstructor
@@ -20,10 +23,11 @@ public class ResenaEntity {
 
     private Byte calificacion;
     private String comentario;
+    private LocalDate fechaCreacion;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private UsuarioEntity usuario;
+    private User usuario;
 
     @ManyToOne
     @JoinColumn(name = "alojamiento_id")

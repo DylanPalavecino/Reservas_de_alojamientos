@@ -6,7 +6,10 @@ import com.donsp.arg.reserva.dto.request.ReservaRequest;
 import com.donsp.arg.reserva.entity.ReservaEntity;
 import com.donsp.arg.reserva.repository.IReservaRepository;
 import com.donsp.arg.reserva.service.IReservaService;
+import com.donsp.arg.usuario.entity.User;
+import com.donsp.arg.usuario.service.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class ReservaServiceImpl implements IReservaService {
 
-    // private final IUsuarioService usuarioService;
+    private final IUserService usuarioService;
     private final IAlojamientoService alojamientoService;
     private final IReservaRepository reservaRepository;
 
@@ -33,33 +36,48 @@ public class ReservaServiceImpl implements IReservaService {
         if(!disponible){
             throw new Exception("Reserva no disponible"); //cambiar esto
         }
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User usuario = usuarioService.findUserByUsername(username);
+
         double noches = ChronoUnit.DAYS.between(reservaRequest.fechaInicio(), reservaRequest.fechaFin());
 
         double precioTotal = noches * ((alojamientoService.buscarEntityPorId(reservaRequest.alojamientoId())).getPrecioPorNoche());
 
         ReservaEntity reservaEntity = ReservaEntity.builder()
                 .alojamiento(alojamientoService.buscarEntityPorId(reservaRequest.alojamientoId()))
-                .usuario(null) //Cambiar esto
+                .usuario(usuario) //Cambiar esto
                 .fechaInicio(reservaRequest.fechaInicio())
                 .fechaFin(reservaRequest.fechaFin())
                 .total(precioTotal)
                 .build();
-
+        reservaRepository.save(reservaEntity);
         return ReservaDTO.builder()
-
+                .alojamiento(alojamientoService.buscarEntityPorId(reservaRequest.alojamientoId()))
+                .usuario(usuario)
+                .total(precioTotal)
+                .fechaInicio(reservaRequest.fechaInicio())
+                .fechaFin(reservaRequest.fechaFin())
                 .build();
     }
 
     @Override
     public String eliminarReserva(Long id) {
         reservaRepository.deleteById(id);
-        return "";
+        return "Reserva eliminada";
     }
 
     @Override
-    public List<ReservaDTO> mostrarReservas() {
+    public List<ReservaDTO> mostrarReservas() throws Exception {
 
-        List<ReservaEntity> reservas = reservaRepository.findAll();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User usuario = usuarioService.findUserByUsername(username);
+
+        if (usuario == null || usuario.getReservas().isEmpty() ) {
+            throw new Exception("No tienes reservas"); // CAMBIAR EXCEPTION
+        }
+
+        List<ReservaEntity> reservas = reservaRepository.findByUsuario(usuario);
         return reservas.stream()
                 .map(reserva -> ReservaDTO.builder()
                         .alojamiento(reserva.getAlojamiento())

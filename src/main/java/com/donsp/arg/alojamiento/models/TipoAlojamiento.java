@@ -6,7 +6,7 @@ public enum TipoAlojamiento {
     DEPARTAMENTO,
     HOTEL,
     HOSTAL,
-    CABAÑA,
+    CABANIA,
     HABITACION_PRIVADA,
     HABITACION_COMPARTIDA,
     VILLA,

@@ -1,7 +1,7 @@
 package com.donsp.arg.reserva.entity;
 
 import com.donsp.arg.alojamiento.entity.AlojamientoEntity;
-import com.donsp.arg.usuario.entity.UsuarioEntity;
+import com.donsp.arg.usuario.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +24,8 @@ public class ReservaEntity {
     private Double total;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private UsuarioEntity usuario;
+    @JoinColumn(name = "user_id")
+    private User usuario;
 
     @ManyToOne
     @JoinColumn(name = "alojamiento_id")

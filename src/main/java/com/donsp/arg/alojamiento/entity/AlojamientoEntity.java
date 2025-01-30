@@ -2,7 +2,7 @@ package com.donsp.arg.alojamiento.entity;
 
 import com.donsp.arg.alojamiento.models.TipoAlojamiento;
 import com.donsp.arg.reserva.entity.ReservaEntity;
-import com.donsp.arg.usuario.entity.UsuarioEntity;
+import com.donsp.arg.usuario.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +27,7 @@ public class AlojamientoEntity {
     private Double precioPorNoche;
     private Integer capacidadPersonas;
     @ManyToOne @JoinColumn(name = "dueño_id")
-    private UsuarioEntity propietario;
+    private User propietario;
     @OneToMany(mappedBy = "alojamiento", cascade = CascadeType.ALL)
     private List<ReservaEntity> reservas;
 
